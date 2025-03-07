@@ -1,5 +1,5 @@
 import React from 'react';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerContentComponentProps, DrawerScreenProps } from '@react-navigation/drawer';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useTheme, lightTheme, darkTheme } from '../context/ThemeContext';
@@ -38,7 +38,7 @@ export type AppParamList = {
 // Usa el tipo de lista de parámetros en el Drawer.Navigator
 const Drawer = createDrawerNavigator<AppParamList>();
 
-const CustomDrawerContent = (props: any) => {
+const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const { theme } = useTheme();
   const colors = theme === 'light' ? lightTheme : darkTheme;
 
@@ -127,13 +127,18 @@ const getIconName = (routeName: string) => {
   }
 };
 
+interface IconProps {
+  color: string;
+  size: number;
+}
+
 const AppNavigator = () => {
   const { theme } = useTheme();
   const colors = theme === 'light' ? lightTheme : darkTheme;
 
   return (
     <Drawer.Navigator
-      drawerContent={(props) => <CustomDrawerContent {...props} />}
+      drawerContent={(props: DrawerContentComponentProps) => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerStyle: {
           backgroundColor: colors.card,
@@ -154,7 +159,7 @@ const AppNavigator = () => {
         component={HomeScreen}
         options={{
           title: 'Inicio',
-          drawerIcon: ({ color }) => <Icon name="home" size={24} color={color} />,
+          drawerIcon: ({ color }: IconProps) => <Icon name="home" size={24} color={color} />,
         }}
       />
       <Drawer.Screen
@@ -162,7 +167,7 @@ const AppNavigator = () => {
         component={SearchScreen}
         options={{
           title: 'Calculadora de Masa Molar',
-          drawerIcon: ({ color }) => <Icon name="calculate" size={24} color={color} />,
+          drawerIcon: ({ color }: IconProps) => <Icon name="calculate" size={24} color={color} />,
         }}
       />
       <Drawer.Screen
@@ -170,7 +175,7 @@ const AppNavigator = () => {
         component={SolutionsScreen}
         options={{
           title: 'Cálculo de Soluciones',
-          drawerIcon: ({ color }) => <Icon name="science" size={24} color={color} />,
+          drawerIcon: ({ color }: IconProps) => <Icon name="science" size={24} color={color} />,
         }}
       />
       <Drawer.Screen
@@ -178,7 +183,7 @@ const AppNavigator = () => {
         component={EnzymeLibraryScreen}
         options={{
           title: 'Biblioteca de Enzimas',
-          drawerIcon: ({ color }) => <Icon name="biotech" size={24} color={color} />,
+          drawerIcon: ({ color }: IconProps) => <Icon name="biotech" size={24} color={color} />,
         }}
       />
       <Drawer.Screen
@@ -186,7 +191,7 @@ const AppNavigator = () => {
         component={ConversionScreen}
         options={{
           title: 'Conversiones',
-          drawerIcon: ({ color }) => <Icon name="compare-arrows" size={24} color={color} />,
+          drawerIcon: ({ color }: IconProps) => <Icon name="compare-arrows" size={24} color={color} />,
         }}
       />
       <Drawer.Screen
@@ -194,7 +199,7 @@ const AppNavigator = () => {
         component={TimerScreen}
         options={{
           title: 'Temporizador',
-          drawerIcon: ({ color }) => <Icon name="timer" size={24} color={color} />,
+          drawerIcon: ({ color }: IconProps) => <Icon name="timer" size={24} color={color} />,
         }}
       />
       <Drawer.Screen
@@ -202,7 +207,7 @@ const AppNavigator = () => {
         component={CellCounterScreen}
         options={{
           title: 'Contador de Células',
-          drawerIcon: ({ color }) => <Icon name="grid-on" size={24} color={color} />,
+          drawerIcon: ({ color }: IconProps) => <Icon name="grid-on" size={24} color={color} />,
         }}
       />
       <Drawer.Screen
@@ -210,7 +215,7 @@ const AppNavigator = () => {
         component={SettingsScreen}
         options={{
           title: 'Configuración',
-          drawerIcon: ({ color }) => <Icon name="settings" size={24} color={color} />,
+          drawerIcon: ({ color }: IconProps) => <Icon name="settings" size={24} color={color} />,
         }}
       />
     </Drawer.Navigator>

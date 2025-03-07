@@ -18,7 +18,13 @@ type RootStackParamList = {
 
 type NavigationProp = DrawerNavigationProp<RootStackParamList>;
 
-const FloatingSymbol = ({ symbol, style }: { symbol: string; style: any }) => {
+interface FloatingSymbolProps {
+  symbol: string;
+  style: any;
+  key?: number;
+}
+
+const FloatingSymbol: React.FC<FloatingSymbolProps> = ({ symbol, style }) => {
   const translateY = useRef(new Animated.Value(0)).current;
   const opacity = useRef(new Animated.Value(0)).current;
 

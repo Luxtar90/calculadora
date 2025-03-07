@@ -19,10 +19,18 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.ChemicalCalcApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "fe37fef9-fd58-4cf1-acec-5f41a2b1831f"
+      }
     }
-  }
+  },
+  "name": "ChemicalCalcApp",
+  "displayName": "ChemicalCalcApp"
 }

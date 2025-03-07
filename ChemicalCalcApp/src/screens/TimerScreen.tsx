@@ -5,7 +5,7 @@ const TimerScreen = () => {
   const [seconds, setSeconds] = useState(0);
   const [running, setRunning] = useState(false);
   const [targetTime, setTargetTime] = useState('');
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<number | null>(null);
 
   useEffect(() => {
     return () => {
