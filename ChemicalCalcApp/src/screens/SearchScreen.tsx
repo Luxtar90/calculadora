@@ -7,7 +7,7 @@ import { DrawerNavigationProp } from '@react-navigation/drawer';
 type RootStackParamList = {
   Home: undefined;
   Search: undefined;
-  Concentration: { molarMass: number; equivalents: number; equivalentWeight: number; compoundType: string };
+  Solutions: { params: { molarMass: number; equivalents: number; equivalentWeight: number; compoundType: string } };
 };
 
 type NavigationProp = DrawerNavigationProp<RootStackParamList>;
@@ -459,14 +459,16 @@ const SearchScreen = () => {
     }
   };
 
-  // Navegar a la pantalla de concentración
+  // Navegar a la pantalla de soluciones
   const navigateToConcentration = () => {
     if (molarMass && equivalents !== null && equivalentWeight !== null) {
-      navigation.navigate('Concentration', { 
-        molarMass,
-        equivalents,
-        equivalentWeight,
-        compoundType 
+      navigation.navigate('Solutions', { 
+        params: {
+          molarMass,
+          equivalents,
+          equivalentWeight,
+          compoundType 
+        }
       });
     }
   };
@@ -566,7 +568,7 @@ const SearchScreen = () => {
                 onPress={navigateToConcentration}
               >
                 <Text style={styles.useButtonText}>
-                  Usar en Cálculo de Concentración →
+                  Usar en Cálculo de Soluciones →
                 </Text>
               </TouchableOpacity>
             </>

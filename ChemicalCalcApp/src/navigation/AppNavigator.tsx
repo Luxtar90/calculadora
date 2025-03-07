@@ -3,91 +3,116 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useTheme, lightTheme, darkTheme } from '../context/ThemeContext';
 import HomeScreen from '../screens/HomeScreen';
 import SearchScreen from '../screens/SearchScreen';
-import ConcentrationScreen from '../screens/ConcentrationScreen';
-import PurityScreen from '../screens/PurityScreen';
-import DensityScreen from '../screens/DensityScreen';
-import DilutionScreen from '../screens/DilutionScreen';
+import SolutionsScreen from '../screens/SolutionsScreen';
 import EnzymeLibraryScreen from '../screens/EnzymeLibraryScreen';
 import ConversionScreen from '../screens/ConversionScreen';
 import TimerScreen from '../screens/TimerScreen';
 import CellCounterScreen from '../screens/CellCounterScreen';
+import SettingsScreen from '../screens/SettingsScreen';
 import { RouteProp } from '@react-navigation/native';
 
-// Define el tipo ConcentrationParams si no está importado
-type ConcentrationParams = {
-  molarMass: number;
-  equivalents: number;
-  equivalentWeight: number;
-  compoundType: string;
+// Define el tipo de parámetros para Solutions
+type SolutionsParams = {
+  params?: {
+    molarMass?: number;
+    equivalents?: number;
+    equivalentWeight?: number;
+    compoundType?: string;
+  };
 };
 
 // Define el tipo de lista de parámetros
 export type AppParamList = {
   Home: undefined;
   Search: undefined;
-  Concentration: { params: ConcentrationParams };
-  Purity: undefined;
-  Density: undefined;
-  Dilution: undefined;
+  Solutions: SolutionsParams;
   EnzymeLibrary: undefined;
   Conversion: undefined;
   Timer: undefined;
   CellCounter: undefined;
+  Settings: undefined;
 };
 
 // Usa el tipo de lista de parámetros en el Drawer.Navigator
 const Drawer = createDrawerNavigator<AppParamList>();
 
-const CustomDrawerContent = (props: any) => (
-  <View style={{ flex: 1, backgroundColor: '#1a1a1a', paddingTop: 40 }}>
-    {props.state.routes.map((route: any, index: number) => (
-      <TouchableOpacity
-        key={route.key}
-        style={{
-          padding: 15,
-          backgroundColor: props.state.index === index ? '#333' : 'transparent',
-          flexDirection: 'row',
-          alignItems: 'center',
-          marginHorizontal: 10,
-          borderRadius: 8,
-        }}
-        onPress={() => props.navigation.navigate(route.name)}
-      >
-        <Icon
-          name={getIconName(route.name)}
-          size={24}
-          color={props.state.index === index ? '#4CAF50' : '#fff'}
-        />
-        <Text
+const CustomDrawerContent = (props: any) => {
+  const { theme } = useTheme();
+  const colors = theme === 'light' ? lightTheme : darkTheme;
+
+  return (
+    <View style={{ 
+      flex: 1, 
+      backgroundColor: colors.background, 
+      paddingTop: 40 
+    }}>
+      {props.state.routes.map((route: any, index: number) => (
+        <TouchableOpacity
+          key={route.key}
           style={{
-            color: props.state.index === index ? '#4CAF50' : '#fff',
-            marginLeft: 15,
-            fontSize: 16,
+            padding: 15,
+            backgroundColor: props.state.index === index ? colors.card : 'transparent',
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginHorizontal: 10,
+            borderRadius: 8,
           }}
+          onPress={() => props.navigation.navigate(route.name)}
         >
-          {route.name}
-        </Text>
-      </TouchableOpacity>
-    ))}
-  </View>
-);
+          <Icon
+            name={getIconName(route.name)}
+            size={24}
+            color={props.state.index === index ? colors.primary : colors.text}
+          />
+          <Text
+            style={{
+              color: props.state.index === index ? colors.primary : colors.text,
+              marginLeft: 15,
+              fontSize: 16,
+            }}
+          >
+            {getScreenTitle(route.name)}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+};
+
+const getScreenTitle = (routeName: string) => {
+  switch (routeName) {
+    case 'Home':
+      return 'Inicio';
+    case 'Search':
+      return 'Calculadora de Masa Molar';
+    case 'Solutions':
+      return 'Cálculo de Soluciones';
+    case 'EnzymeLibrary':
+      return 'Biblioteca de Enzimas';
+    case 'Conversion':
+      return 'Conversiones';
+    case 'Timer':
+      return 'Temporizador';
+    case 'CellCounter':
+      return 'Contador de Células';
+    case 'Settings':
+      return 'Configuración';
+    default:
+      return routeName;
+  }
+};
 
 const getIconName = (routeName: string) => {
   switch (routeName) {
     case 'Home':
       return 'home';
     case 'Search':
-      return 'search';
-    case 'Concentration':
+      return 'calculate';
+    case 'Solutions':
       return 'science';
-    case 'Purity':
-      return 'filter-alt';
-    case 'Density':
-      return 'opacity';
-    case 'Dilution':
-      return 'water-drop';
     case 'EnzymeLibrary':
       return 'biotech';
     case 'Conversion':
@@ -96,35 +121,41 @@ const getIconName = (routeName: string) => {
       return 'timer';
     case 'CellCounter':
       return 'grid-on';
+    case 'Settings':
+      return 'settings';
     default:
       return 'circle';
   }
 };
 
-export default function AppNavigator() {
+const AppNavigator = () => {
+  const { theme } = useTheme();
+  const colors = theme === 'light' ? lightTheme : darkTheme;
+
   return (
     <NavigationContainer>
       <Drawer.Navigator
         drawerContent={(props) => <CustomDrawerContent {...props} />}
         screenOptions={{
           headerStyle: {
-            backgroundColor: '#1a1a1a',
+            backgroundColor: colors.card,
           },
-          headerTintColor: '#fff',
+          headerTintColor: colors.text,
           headerTitleStyle: {
             fontWeight: 'bold',
           },
           drawerStyle: {
-            backgroundColor: '#1a1a1a',
-            width: 280,
+            backgroundColor: colors.card,
           },
-          drawerType: 'slide',
+          drawerActiveTintColor: colors.primary,
+          drawerInactiveTintColor: colors.textSecondary,
         }}
       >
         <Drawer.Screen
           name="Home"
           component={HomeScreen}
           options={{
+            title: 'Inicio',
             drawerIcon: ({ color }) => <Icon name="home" size={24} color={color} />,
           }}
         />
@@ -132,41 +163,23 @@ export default function AppNavigator() {
           name="Search"
           component={SearchScreen}
           options={{
-            drawerIcon: ({ color }) => <Icon name="search" size={24} color={color} />,
+            title: 'Calculadora de Masa Molar',
+            drawerIcon: ({ color }) => <Icon name="calculate" size={24} color={color} />,
           }}
         />
         <Drawer.Screen
-          name="Concentration"
-          component={ConcentrationScreen}
+          name="Solutions"
+          component={SolutionsScreen}
           options={{
+            title: 'Cálculo de Soluciones',
             drawerIcon: ({ color }) => <Icon name="science" size={24} color={color} />,
-          }}
-        />
-        <Drawer.Screen
-          name="Purity"
-          component={PurityScreen}
-          options={{
-            drawerIcon: ({ color }) => <Icon name="filter-alt" size={24} color={color} />,
-          }}
-        />
-        <Drawer.Screen
-          name="Density"
-          component={DensityScreen}
-          options={{
-            drawerIcon: ({ color }) => <Icon name="opacity" size={24} color={color} />,
-          }}
-        />
-        <Drawer.Screen
-          name="Dilution"
-          component={DilutionScreen}
-          options={{
-            drawerIcon: ({ color }) => <Icon name="water-drop" size={24} color={color} />,
           }}
         />
         <Drawer.Screen
           name="EnzymeLibrary"
           component={EnzymeLibraryScreen}
           options={{
+            title: 'Biblioteca de Enzimas',
             drawerIcon: ({ color }) => <Icon name="biotech" size={24} color={color} />,
           }}
         />
@@ -174,6 +187,7 @@ export default function AppNavigator() {
           name="Conversion"
           component={ConversionScreen}
           options={{
+            title: 'Conversiones',
             drawerIcon: ({ color }) => <Icon name="compare-arrows" size={24} color={color} />,
           }}
         />
@@ -181,6 +195,7 @@ export default function AppNavigator() {
           name="Timer"
           component={TimerScreen}
           options={{
+            title: 'Temporizador',
             drawerIcon: ({ color }) => <Icon name="timer" size={24} color={color} />,
           }}
         />
@@ -188,10 +203,21 @@ export default function AppNavigator() {
           name="CellCounter"
           component={CellCounterScreen}
           options={{
+            title: 'Contador de Células',
             drawerIcon: ({ color }) => <Icon name="grid-on" size={24} color={color} />,
+          }}
+        />
+        <Drawer.Screen
+          name="Settings"
+          component={SettingsScreen}
+          options={{
+            title: 'Configuración',
+            drawerIcon: ({ color }) => <Icon name="settings" size={24} color={color} />,
           }}
         />
       </Drawer.Navigator>
     </NavigationContainer>
   );
-}
+};
+
+export default AppNavigator;

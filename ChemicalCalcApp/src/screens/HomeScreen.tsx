@@ -3,53 +3,92 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useTheme, lightTheme, darkTheme } from '../context/ThemeContext';
 
 type RootStackParamList = {
   Home: undefined;
   Search: undefined;
-  Concentration: undefined;
-  Purity: undefined;
-  Density: undefined;
-  Dilution: undefined;
+  Solutions: undefined;
   EnzymeLibrary: undefined;
   Conversion: undefined;
   Timer: undefined;
   CellCounter: undefined;
+  Settings: undefined;
 };
 
 type NavigationProp = DrawerNavigationProp<RootStackParamList>;
 
 const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp>();
+  const { theme } = useTheme();
+  const colors = theme === 'light' ? lightTheme : darkTheme;
 
   const menuItems = [
-    { name: 'Search', icon: 'search', title: 'Buscar Compuesto' },
-    { name: 'Concentration', icon: 'science', title: 'Calcular Concentración' },
-    { name: 'Purity', icon: 'filter-alt', title: 'Calcular Pureza' },
-    { name: 'Density', icon: 'opacity', title: 'Calcular Densidad' },
-    { name: 'Dilution', icon: 'water-drop', title: 'Calcular Dilución' },
-    { name: 'EnzymeLibrary', icon: 'biotech', title: 'Biblioteca de Enzimas' },
-    { name: 'Conversion', icon: 'compare-arrows', title: 'Conversiones' },
-    { name: 'Timer', icon: 'timer', title: 'Temporizador' },
-    { name: 'CellCounter', icon: 'grid-on', title: 'Contador de Células' },
+    { 
+      name: 'Search', 
+      icon: 'calculate', 
+      title: 'Calculadora de Masa Molar',
+      description: 'Calcula la masa molar de compuestos químicos'
+    },
+    { 
+      name: 'Solutions', 
+      icon: 'science', 
+      title: 'Cálculo de Soluciones',
+      description: 'Concentraciones, diluciones y pureza'
+    },
+    { 
+      name: 'EnzymeLibrary', 
+      icon: 'biotech', 
+      title: 'Biblioteca de Enzimas',
+      description: 'Información sobre enzimas comunes'
+    },
+    { 
+      name: 'Conversion', 
+      icon: 'compare-arrows', 
+      title: 'Conversiones',
+      description: 'Conversión entre unidades'
+    },
+    { 
+      name: 'Timer', 
+      icon: 'timer', 
+      title: 'Temporizador',
+      description: 'Control de tiempo para experimentos'
+    },
+    { 
+      name: 'CellCounter', 
+      icon: 'grid-on', 
+      title: 'Contador de Células',
+      description: 'Conteo de células en laboratorio'
+    },
+    { 
+      name: 'Settings', 
+      icon: 'settings', 
+      title: 'Configuración',
+      description: 'Ajustes de la aplicación'
+    },
   ] as const;
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
-        <Text style={styles.title}>Calculadora Química</Text>
-        <Text style={styles.subtitle}>Selecciona una herramienta</Text>
+        <Text style={[styles.title, { color: colors.text }]}>Calculadora Química</Text>
+        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+          Herramientas para el laboratorio
+        </Text>
       </View>
       
       <View style={styles.grid}>
         {menuItems.map((item, index) => (
           <TouchableOpacity
             key={index}
-            style={styles.card}
+            style={[styles.card, { backgroundColor: colors.card }]}
             onPress={() => navigation.navigate(item.name)}
           >
-            <Icon name={item.icon} size={32} color="#4CAF50" />
-            <Text style={styles.cardText}>{item.title}</Text>
+            <Icon name={item.icon} size={32} color={colors.primary} />
+            <Text style={[styles.cardTitle, { color: colors.text }]}>{item.title}</Text>
+            <Text style={[styles.cardDescription, { color: colors.textSecondary }]}>
+              {item.description}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -60,7 +99,6 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212',
   },
   header: {
     padding: 20,
@@ -69,12 +107,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#fff',
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: '#888',
     marginBottom: 20,
   },
   grid: {
@@ -85,7 +121,6 @@ const styles = StyleSheet.create({
   },
   card: {
     width: '48%',
-    backgroundColor: '#1E1E1E',
     borderRadius: 12,
     padding: 20,
     marginBottom: 15,
@@ -96,11 +131,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
-  cardText: {
-    color: '#fff',
+  cardTitle: {
     marginTop: 12,
     fontSize: 14,
+    fontWeight: 'bold',
     textAlign: 'center',
+  },
+  cardDescription: {
+    marginTop: 4,
+    fontSize: 12,
+    textAlign: 'center',
+    paddingHorizontal: 8,
   },
 });
 
