@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { useTheme, lightTheme, darkTheme } from '../context/ThemeContext';
 
 // Define navegación
 type RootStackParamList = {
@@ -392,6 +393,8 @@ const SearchScreen = () => {
   const [showDensityInput, setShowDensityInput] = useState(false);
   const [error, setError] = useState('');
   const navigation = useNavigation<NavigationProp>();
+  const { theme } = useTheme();
+  const colors = theme === 'light' ? lightTheme : darkTheme;
 
   // Limpiar estados
   const clearResults = () => {
@@ -474,17 +477,18 @@ const SearchScreen = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.card}>
-        <Text style={styles.title}>Calculadora de Masa Molar</Text>
+    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.card, { backgroundColor: colors.card }]}>
+        <Text style={[styles.title, { color: colors.text }]}>Calculadora de Masa Molar</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { color: colors.text, backgroundColor: colors.background }]}
           value={compound}
           onChangeText={(text) => {
             setCompound(text.trim());
             if (error) setError('');
           }}
           placeholder="Ingrese fórmula química (ej: H2O, CH1.8O0.5N0.2)"
+          placeholderTextColor={colors.textSecondary}
           autoCapitalize="none"
           autoCorrect={false}
         />
@@ -506,20 +510,20 @@ const SearchScreen = () => {
       </View>
 
       {molarMass !== null && (
-        <View style={styles.resultCard}>
-          <Text style={styles.resultTitle}>Resultados:</Text>
+        <View style={[styles.resultCard, { backgroundColor: colors.card }]}>
+          <Text style={[styles.resultTitle, { color: colors.text }]}>Resultados:</Text>
           
           <View style={styles.resultItem}>
-            <Text style={styles.resultLabel}>Masa Molar:</Text>
-            <Text style={styles.resultValue}>{molarMass.toFixed(3)} g/mol</Text>
+            <Text style={[styles.resultLabel, { color: colors.text }]}>Masa Molar:</Text>
+            <Text style={[styles.resultValue, { color: colors.primary }]}>{molarMass.toFixed(3)} g/mol</Text>
           </View>
 
-          <View style={styles.densitySection}>
+          <View style={[styles.densitySection, { borderColor: colors.border }]}>
             <View style={styles.resultItem}>
-              <Text style={styles.resultLabel}>
+              <Text style={[styles.resultLabel, { color: colors.text }]}>
                 Densidad {densityDatabase[compound] ? '(20°C)' : '(aproximada)'}:
               </Text>
-              <Text style={styles.resultValue}>{density?.toFixed(3)} g/mL</Text>
+              <Text style={[styles.resultValue, { color: colors.primary }]}>{density?.toFixed(3)} g/mL</Text>
             </View>
             <TouchableOpacity
               style={styles.editDensityButton}
@@ -537,24 +541,24 @@ const SearchScreen = () => {
           {equivalentWeight !== null && (
             <>
               <View style={styles.resultItem}>
-                <Text style={styles.resultLabel}>Peso Equivalente:</Text>
-                <Text style={styles.resultValue}>{equivalentWeight.toFixed(3)} g/eq</Text>
+                <Text style={[styles.resultLabel, { color: colors.text }]}>Peso Equivalente:</Text>
+                <Text style={[styles.resultValue, { color: colors.primary }]}>{equivalentWeight.toFixed(3)} g/eq</Text>
               </View>
 
               <View style={styles.resultItem}>
-                <Text style={styles.resultLabel}>Número de Cargas:</Text>
-                <Text style={styles.resultValue}>{equivalents?.toFixed(3)}</Text>
+                <Text style={[styles.resultLabel, { color: colors.text }]}>Número de Cargas:</Text>
+                <Text style={[styles.resultValue, { color: colors.primary }]}>{equivalents?.toFixed(3)}</Text>
               </View>
               
-              <View style={styles.infoBox}>
-                <Text style={styles.infoTitle}>
+              <View style={[styles.infoBox, { backgroundColor: colors.border }]}>
+                <Text style={[styles.infoTitle, { color: colors.text }]}>
                   {compoundType === 'acid' && '⚗️ Ácido'}
                   {compoundType === 'base' && '🧪 Base'}
                   {compoundType === 'salt' && '🧂 Sal'}
                   {compoundType === 'oxidation' && '⚛️ Óxido/Metal'}
                   {compoundType === 'biomass' && '🦠 Biomasa'}
                 </Text>
-                <Text style={styles.infoText}>
+                <Text style={[styles.infoText, { color: colors.text }]}>
                   {compoundType === 'acid' && 'Número de H+ disponibles\nN = Molaridad × Acidez'}
                   {compoundType === 'base' && 'Número de OH- o cargas del metal\nN = Molaridad × Basicidad'}
                   {compoundType === 'salt' && 'Número de cargas del metal\nN = Molaridad × Cargas'}
@@ -583,7 +587,6 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 16,
-    backgroundColor: '#f5f5f5'
   },
   card: {
     backgroundColor: 'white',

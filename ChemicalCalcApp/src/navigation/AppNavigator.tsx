@@ -1,5 +1,4 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -133,90 +132,88 @@ const AppNavigator = () => {
   const colors = theme === 'light' ? lightTheme : darkTheme;
 
   return (
-    <NavigationContainer>
-      <Drawer.Navigator
-        drawerContent={(props) => <CustomDrawerContent {...props} />}
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: colors.card,
-          },
-          headerTintColor: colors.text,
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-          drawerStyle: {
-            backgroundColor: colors.card,
-          },
-          drawerActiveTintColor: colors.primary,
-          drawerInactiveTintColor: colors.textSecondary,
+    <Drawer.Navigator
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: colors.card,
+        },
+        headerTintColor: colors.text,
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+        drawerStyle: {
+          backgroundColor: colors.card,
+        },
+        drawerActiveTintColor: colors.primary,
+        drawerInactiveTintColor: colors.textSecondary,
+      }}
+    >
+      <Drawer.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          title: 'Inicio',
+          drawerIcon: ({ color }) => <Icon name="home" size={24} color={color} />,
         }}
-      >
-        <Drawer.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            title: 'Inicio',
-            drawerIcon: ({ color }) => <Icon name="home" size={24} color={color} />,
-          }}
-        />
-        <Drawer.Screen
-          name="Search"
-          component={SearchScreen}
-          options={{
-            title: 'Calculadora de Masa Molar',
-            drawerIcon: ({ color }) => <Icon name="calculate" size={24} color={color} />,
-          }}
-        />
-        <Drawer.Screen
-          name="Solutions"
-          component={SolutionsScreen}
-          options={{
-            title: 'Cálculo de Soluciones',
-            drawerIcon: ({ color }) => <Icon name="science" size={24} color={color} />,
-          }}
-        />
-        <Drawer.Screen
-          name="EnzymeLibrary"
-          component={EnzymeLibraryScreen}
-          options={{
-            title: 'Biblioteca de Enzimas',
-            drawerIcon: ({ color }) => <Icon name="biotech" size={24} color={color} />,
-          }}
-        />
-        <Drawer.Screen
-          name="Conversion"
-          component={ConversionScreen}
-          options={{
-            title: 'Conversiones',
-            drawerIcon: ({ color }) => <Icon name="compare-arrows" size={24} color={color} />,
-          }}
-        />
-        <Drawer.Screen
-          name="Timer"
-          component={TimerScreen}
-          options={{
-            title: 'Temporizador',
-            drawerIcon: ({ color }) => <Icon name="timer" size={24} color={color} />,
-          }}
-        />
-        <Drawer.Screen
-          name="CellCounter"
-          component={CellCounterScreen}
-          options={{
-            title: 'Contador de Células',
-            drawerIcon: ({ color }) => <Icon name="grid-on" size={24} color={color} />,
-          }}
-        />
-        <Drawer.Screen
-          name="Settings"
-          component={SettingsScreen}
-          options={{
-            title: 'Configuración',
-            drawerIcon: ({ color }) => <Icon name="settings" size={24} color={color} />,
-          }}
-        />
-      </Drawer.Navigator>
-    </NavigationContainer>
+      />
+      <Drawer.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{
+          title: 'Calculadora de Masa Molar',
+          drawerIcon: ({ color }) => <Icon name="calculate" size={24} color={color} />,
+        }}
+      />
+      <Drawer.Screen
+        name="Solutions"
+        component={SolutionsScreen}
+        options={{
+          title: 'Cálculo de Soluciones',
+          drawerIcon: ({ color }) => <Icon name="science" size={24} color={color} />,
+        }}
+      />
+      <Drawer.Screen
+        name="EnzymeLibrary"
+        component={EnzymeLibraryScreen}
+        options={{
+          title: 'Biblioteca de Enzimas',
+          drawerIcon: ({ color }) => <Icon name="biotech" size={24} color={color} />,
+        }}
+      />
+      <Drawer.Screen
+        name="Conversion"
+        component={ConversionScreen}
+        options={{
+          title: 'Conversiones',
+          drawerIcon: ({ color }) => <Icon name="compare-arrows" size={24} color={color} />,
+        }}
+      />
+      <Drawer.Screen
+        name="Timer"
+        component={TimerScreen}
+        options={{
+          title: 'Temporizador',
+          drawerIcon: ({ color }) => <Icon name="timer" size={24} color={color} />,
+        }}
+      />
+      <Drawer.Screen
+        name="CellCounter"
+        component={CellCounterScreen}
+        options={{
+          title: 'Contador de Células',
+          drawerIcon: ({ color }) => <Icon name="grid-on" size={24} color={color} />,
+        }}
+      />
+      <Drawer.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{
+          title: 'Configuración',
+          drawerIcon: ({ color }) => <Icon name="settings" size={24} color={color} />,
+        }}
+      />
+    </Drawer.Navigator>
   );
 };
 

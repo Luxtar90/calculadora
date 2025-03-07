@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useTheme, lightTheme, darkTheme } from '../context/ThemeContext';
 
 interface ConversionCategory {
   name: string;
@@ -82,6 +83,8 @@ const conversionCategories: ConversionCategory[] = [
 ];
 
 const ConversionScreen = () => {
+  const { theme } = useTheme();
+  const colors = theme === 'light' ? lightTheme : darkTheme;
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [fromUnit, setFromUnit] = useState(conversionCategories[0].units[0]);
   const [toUnit, setToUnit] = useState(conversionCategories[0].units[1]);
@@ -179,26 +182,30 @@ const ConversionScreen = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.categoriesContainer}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.categoriesContainer, { backgroundColor: colors.background, borderBottomColor: colors.border }]}>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.categoriesContent}
+        >
           {conversionCategories.map((category, index) => (
             <TouchableOpacity
               key={category.name}
               style={[
                 styles.categoryButton,
-                selectedCategory === index && styles.selectedCategory
+                { backgroundColor: selectedCategory === index ? colors.primary : colors.card }
               ]}
               onPress={() => handleCategoryChange(index)}
             >
               <MaterialCommunityIcons
                 name={category.icon as any}
-                size={24}
-                color={selectedCategory === index ? '#fff' : '#2c3e50'}
+                size={28}
+                color={selectedCategory === index ? colors.background : colors.primary}
               />
               <Text style={[
                 styles.categoryText,
-                selectedCategory === index && styles.selectedCategoryText
+                { color: selectedCategory === index ? colors.background : colors.primary }
               ]}>
                 {category.name}
               </Text>
@@ -207,60 +214,86 @@ const ConversionScreen = () => {
         </ScrollView>
       </View>
 
-      <View style={styles.card}>
+      <View style={[styles.card, { backgroundColor: colors.card }]}>
         <View style={styles.conversionGroup}>
+          <Text style={[styles.groupTitle, { color: colors.text }]}>Unidad de origen</Text>
           <View style={styles.unitSelector}>
             {conversionCategories[selectedCategory].units.map(unit => (
               <TouchableOpacity
                 key={unit}
                 style={[
                   styles.unitButton,
-                  fromUnit === unit && styles.selectedUnit
+                  { backgroundColor: fromUnit === unit ? colors.primary : colors.border },
                 ]}
                 onPress={() => setFromUnit(unit)}
               >
                 <Text style={[
                   styles.unitText,
-                  fromUnit === unit && styles.selectedUnitText
+                  { color: fromUnit === unit ? colors.background : colors.text }
                 ]}>
                   {unit}
                 </Text>
               </TouchableOpacity>
             ))}
           </View>
-          <TextInput
-            style={styles.input}
-            value={fromValue}
-            onChangeText={setFromValue}
-            keyboardType="numeric"
-            placeholder="0"
-            placeholderTextColor="#666"
+          <View style={[styles.inputContainer, { backgroundColor: colors.border }]}>
+            <MaterialCommunityIcons
+              name={conversionCategories[selectedCategory].icon as any}
+              size={24}
+              color={colors.primary}
+              style={styles.inputIcon}
+            />
+            <TextInput
+              style={[styles.input, { color: colors.text }]}
+              value={fromValue}
+              onChangeText={setFromValue}
+              keyboardType="numeric"
+              placeholder="Ingrese valor"
+              placeholderTextColor={colors.textSecondary}
+            />
+          </View>
+        </View>
+
+        <View style={styles.arrowContainer}>
+          <MaterialCommunityIcons
+            name="arrow-down"
+            size={32}
+            color={colors.primary}
           />
         </View>
 
         <View style={styles.conversionGroup}>
+          <Text style={[styles.groupTitle, { color: colors.text }]}>Unidad de destino</Text>
           <View style={styles.unitSelector}>
             {conversionCategories[selectedCategory].units.map(unit => (
               <TouchableOpacity
                 key={unit}
                 style={[
                   styles.unitButton,
-                  toUnit === unit && styles.selectedUnit
+                  { backgroundColor: toUnit === unit ? colors.primary : colors.border },
                 ]}
                 onPress={() => setToUnit(unit)}
               >
                 <Text style={[
                   styles.unitText,
-                  toUnit === unit && styles.selectedUnitText
+                  { color: toUnit === unit ? colors.background : colors.text }
                 ]}>
                   {unit}
                 </Text>
               </TouchableOpacity>
             ))}
           </View>
-          <Text style={styles.resultText}>
-            {toValue}
-          </Text>
+          <View style={[styles.resultContainer, { backgroundColor: colors.border }]}>
+            <MaterialCommunityIcons
+              name="equal"
+              size={24}
+              color={colors.primary}
+              style={styles.resultIcon}
+            />
+            <Text style={[styles.resultText, { color: colors.text }]}>
+              {toValue || '0'}
+            </Text>
+          </View>
         </View>
       </View>
     </ScrollView>
@@ -270,78 +303,100 @@ const ConversionScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#202124',
   },
   categoriesContainer: {
-    backgroundColor: '#202124',
-    paddingVertical: 10,
+    paddingVertical: 15,
     marginBottom: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#3c4043',
+  },
+  categoriesContent: {
+    paddingHorizontal: 15,
   },
   categoryButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    marginHorizontal: 8,
-    borderRadius: 20,
-    backgroundColor: '#3c4043',
-  },
-  selectedCategory: {
-    backgroundColor: '#8ab4f8',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    marginHorizontal: 6,
+    borderRadius: 25,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   categoryText: {
-    marginLeft: 8,
-    color: '#e8eaed',
+    marginLeft: 10,
     fontSize: 16,
-  },
-  selectedCategoryText: {
-    color: '#202124',
+    fontWeight: '600',
   },
   card: {
-    backgroundColor: '#202124',
     margin: 20,
     borderRadius: 20,
     padding: 20,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   conversionGroup: {
-    marginBottom: 20,
+    marginBottom: 25,
+  },
+  groupTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
   },
   unitSelector: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginBottom: 10,
+    marginBottom: 15,
+    gap: 8,
   },
   unitButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    marginRight: 8,
-    marginBottom: 8,
-    borderRadius: 16,
-    backgroundColor: '#3c4043',
-  },
-  selectedUnit: {
-    backgroundColor: '#8ab4f8',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    minWidth: 60,
+    alignItems: 'center',
   },
   unitText: {
-    color: '#e8eaed',
-    fontSize: 14,
+    fontSize: 15,
+    fontWeight: '500',
   },
-  selectedUnitText: {
-    color: '#202124',
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 15,
+    paddingHorizontal: 15,
+    height: 56,
+  },
+  inputIcon: {
+    marginRight: 10,
   },
   input: {
-    fontSize: 32,
-    color: '#e8eaed',
-    padding: 10,
-    borderBottomWidth: 2,
-    borderBottomColor: '#3c4043',
+    flex: 1,
+    fontSize: 24,
+    height: '100%',
+  },
+  arrowContainer: {
+    alignItems: 'center',
+    marginVertical: 15,
+  },
+  resultContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 15,
+    paddingHorizontal: 15,
+    height: 56,
+  },
+  resultIcon: {
+    marginRight: 10,
   },
   resultText: {
-    fontSize: 32,
-    color: '#e8eaed',
-    padding: 10,
+    flex: 1,
+    fontSize: 24,
   },
 });
 
